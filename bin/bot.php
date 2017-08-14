@@ -20,15 +20,21 @@ while (true) {
         $message = $update['message'];
 
         $chatId = $message['chat']['id'];
+
+        // E.g. "/start <uniqueCode>"
         $text = $message['text'];
 
         if (!str_startswith($text, '/start')) {
             continue;
         }
 
-        $uniqueCode = explode(' ', $text)[1];
+        $username = null;
 
-        $username = getUsernameByUniqueToken($uniqueCode);
+        $parts = explode(' ' , $text);
+        if (count($parts) === 2) { // ['/start', '<uniqueCode>']
+            $uniqueCode = $parts[1];
+            $username = getUsernameByUniqueCode($uniqueCode);
+        }
 
         if ($username !== null) {
             println('Received message from known user "'.$username.'"!');

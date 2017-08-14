@@ -15,7 +15,7 @@ function storeUsernameAndUniqueCode($username, $token)
     saveStorage($storage);
 }
 
-function getUsernameByUniqueToken($token)
+function getUsernameByUniqueCode($token)
 {
     $storage = getStorage();
 
