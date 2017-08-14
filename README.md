@@ -34,7 +34,7 @@ Launch the built-in PHP webserver:
 php -S 127.0.0.1:8000 -t web
 ```
 
-Then launch the long-polling bot:
+Then launch the long-polling bot in another terminal:
 ```bash
 php bin/bot.php
 ```
