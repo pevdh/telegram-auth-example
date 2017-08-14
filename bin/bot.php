@@ -1,0 +1,43 @@
+#!/usr/bin/env php
+<?php
+if (PHP_SAPI !== 'cli') {
+    echo 'Please run this script in the CLI';
+    exit();
+}
+
+require __DIR__.'/../config.php';
+require __DIR__.'/../functions.php';
+
+$updateOffset = 0;
+
+while (true) {
+    println('Getting new updates [offset=%s]', $updateOffset);
+    $updates = getUpdates($updateOffset);
+
+    foreach ($updates as $update) {
+        $updateOffset = max($updateOffset, $update['update_id']);
+
+        $message = $update['message'];
+
+        $chatId = $message['chat']['id'];
+        $text = $message['text'];
+
+        if (!str_startswith($text, '/start')) {
+            continue;
+        }
+
+        $uniqueCode = explode(' ', $text)[1];
+
+        $username = getUsernameByUniqueToken($uniqueCode);
+
+        if ($username !== null) {
+            println('Received message from known user "'.$username.'"!');
+            sendMessage($chatId, 'Hello there, '.$username.'! I am glad you made it!');
+        } else {
+            println('Received message from an unknown user :(');
+            sendMessage($chatId, 'Hello! Unfortunately I do not know you :(');
+        }
+    }
+
+    $updateOffset++;
+}
